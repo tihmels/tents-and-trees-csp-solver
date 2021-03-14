@@ -3,6 +3,7 @@ package de.tihmels.server
 import de.tihmels.ConfigurationData
 import de.tihmels.Configuration
 import de.tihmels.annotation.HasName
+import de.tihmels.csp.CSPConfiguration
 import de.tihmels.csp.heuristic.value.ISelectDomainHeuristic
 import de.tihmels.csp.heuristic.value.LeastConstrainingValueOrderHeuristic
 import de.tihmels.csp.heuristic.value.LexicographicDomainOrderHeuristic

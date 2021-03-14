@@ -4,7 +4,6 @@ import de.tihmels.*
 import de.tihmels.csp.constraint.NoAdjacentTentsConstraint
 import de.tihmels.csp.constraint.TentNextToTreeConstraint
 import de.tihmels.csp.constraint.TentsPerLineConstraint
-import de.tihmels.server.CSPConfiguration
 import java.util.stream.Collectors
 
 class PuzzleCSPMapper(
@@ -22,7 +21,6 @@ class PuzzleCSPMapper(
         addTentsToDomains(domains)
 
         val csp = CSP(
-            puzzle.id!!,
             puzzle.variables,
             domains,
             configuration

@@ -6,6 +6,7 @@ import de.tihmels.TentsAndTrees
 import de.tihmels.csp.constraint.Constraint
 
 interface IPreProcessor {
+
     fun process(
         variables: List<Location>,
         domains: Map<Location, MutableList<Domain>>,
@@ -13,4 +14,5 @@ interface IPreProcessor {
     )
 
     fun setup(puzzle: TentsAndTrees) {}
+
 }

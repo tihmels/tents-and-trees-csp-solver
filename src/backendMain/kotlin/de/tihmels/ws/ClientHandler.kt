@@ -1,14 +1,19 @@
 package de.tihmels.ws
 
 
-import de.tihmels.*
+import de.tihmels.BacktrackingState
+import de.tihmels.CMessageType
+import de.tihmels.Logging
 import de.tihmels.SMessageType.*
+import de.tihmels.logger
+import de.tihmels.misc.RandomSupplier
 import de.tihmels.server.ConfigurationService
-import de.tihmels.server.PuzzleProvider
+import de.tihmels.server.PuzzleLoader
 
-class ClientHandler(private val client: Client): Logging {
+class ClientHandler(private val client: Client) : Logging {
 
-    private val state = ClientState()
+    private val randomPuzzleSupplier = RandomSupplier(PuzzleLoader.puzzles)
+    private val clientState = ClientState(randomPuzzleSupplier.get(), client.output)
 
     private val log = logger()
 
@@ -32,15 +37,9 @@ class ClientHandler(private val client: Client): Logging {
 
     private suspend fun handleMessage(msg: CMessageType.GetPuzzle) {
 
-        state.stopBacktracking()
+        val puzzle = randomPuzzleSupplier.get()
 
-        val puzzle: TentsAndTrees by lazy {
-            var p = PuzzleProvider.getRandomPuzzle()
-            if (state.activePuzzle.id == p.id) p = PuzzleProvider.getRandomPuzzle()
-            p
-        }
-
-        state.activePuzzle = puzzle
+        clientState.setNewPuzzle(puzzle)
 
         client.send(
             PuzzleUpdate(
@@ -58,7 +57,7 @@ class ClientHandler(private val client: Client): Logging {
     }
 
     private fun handleMessage(msg: CMessageType.SetConfiguration) {
-        state.updateConfiguration(msg.configuration)
+        clientState.updateConfiguration(msg.configuration)
     }
 
     private suspend fun handleMessage(msg: CMessageType.SetBacktracking) = when (msg.backtracking) {
@@ -69,19 +68,21 @@ class ClientHandler(private val client: Client): Logging {
 
     private suspend fun startBacktracking() {
 
-        state.setupCSP()
-        state.startBacktracking(client.output)
+        clientState.setupCSP()
+        clientState.startBacktracking()
 
         client.send(BacktrackingUpdate(BacktrackingState.RUNNING))
     }
 
     private suspend fun pauseBacktracking() {
-        state.pauseBacktracking()
+        clientState.pauseBacktracking()
+
         client.send(BacktrackingUpdate(BacktrackingState.PAUSED))
     }
 
     private suspend fun stopBacktracking() {
-        state.stopBacktracking()
+        clientState.stopBacktracking()
+
         client.send(BacktrackingUpdate(BacktrackingState.STOPPED))
     }
 }

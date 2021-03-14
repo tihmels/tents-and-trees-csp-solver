@@ -5,6 +5,7 @@ import de.tihmels.Location
 import de.tihmels.csp.constraint.Constraint
 
 interface ISelectVariableHeuristic {
+
     fun selectVariable(
         unassignedVariables: List<Location>,
         domains: Map<Location, List<Domain>>,

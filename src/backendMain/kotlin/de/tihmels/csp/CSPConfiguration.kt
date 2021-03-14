@@ -1,4 +1,4 @@
-package de.tihmels.server
+package de.tihmels.csp
 
 import de.tihmels.TentsAndTrees
 import de.tihmels.csp.heuristic.value.ISelectDomainHeuristic
@@ -8,8 +8,8 @@ import de.tihmels.csp.propagation.IConstraintPropagation
 
 data class CSPConfiguration(
     val preProcessingStrategy: IPreProcessor,
-    val variableStrategy: ISelectVariableHeuristic,
-    val domainStrategy: ISelectDomainHeuristic,
+    val variableSelectionStrategy: ISelectVariableHeuristic,
+    val domainSelectionStrategy: ISelectDomainHeuristic,
     val constraintPropagationStrategy: IConstraintPropagation,
     val speed: Int
 ) {

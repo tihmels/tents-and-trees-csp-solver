@@ -5,6 +5,7 @@ import de.tihmels.Location
 import de.tihmels.csp.constraint.Constraint
 
 interface IConstraintPropagation {
+
     fun propagate(
         assignedVariable: Location,
         assignments: Map<Location, Domain>,

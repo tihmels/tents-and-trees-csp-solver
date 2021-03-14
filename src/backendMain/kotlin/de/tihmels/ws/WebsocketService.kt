@@ -18,9 +18,10 @@ actual class WebsocketService : IWebsocketService, Logging {
     private val log = logger()
 
     override suspend fun socketConnection(input: ReceiveChannel<CMessage>, output: SendChannel<SMessage>) {
+
         val client = Client(input, output).also {
             clients.add(it)
-            log.info("Client connected")
+            log.info("Client ${it.uuid} connected")
         }
 
         ClientHandler(client).start()

@@ -4,18 +4,29 @@ import de.tihmels.*
 import de.tihmels.csp.CSP
 import de.tihmels.csp.PuzzleCSPMapper
 import de.tihmels.server.ConfigurationService
-import de.tihmels.server.PuzzleProvider
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 
 class ClientState(
-    var activePuzzle: TentsAndTrees = PuzzleProvider.getRandomPuzzle(),
-    var configuration: Configuration = Configuration(),
-    var job: Job? = null,
-    var csp: CSP? = null
+    var activePuzzle: TentsAndTrees,
+    private val output: SendChannel<SMessage>
 ) {
 
     private val scope = CoroutineScope(Job() + Dispatchers.Default)
+
+    var configuration: Configuration = Configuration()
+    var csp: CSP? = null
+
+    var paused = false
+
+    private var job: Job? = null
 
     fun setupCSP() {
 
@@ -33,31 +44,52 @@ class ClientState(
         this.csp = csp
     }
 
-    fun startBacktracking(channel: SendChannel<SMessage>) {
-        job = scope.launch {
-            csp!!.backtrackingSearch(channel)
+    suspend fun startBacktracking() {
+
+        csp?.let { csp ->
+
+            val flow = csp.backtrackingSearch()
+
+            job = flow
+                .onCompletion {
+                    output.send(SMessage(SMessageType.BacktrackingUpdate(BacktrackingState.STOPPED)))
+                }
+                .map { assignmentToLocationAndValue(it) }
+                .onEach {
+                    output.send(SMessage(SMessageType.AssignmentUpdate(Assignment(it))))
+                }
+                .launchIn(scope)
+
         }
 
-        job?.invokeOnCompletion {
-            scope.launch {
-                channel.send(SMessage(SMessageType.BacktrackingUpdate(BacktrackingState.STOPPED)))
-            }
-        }
     }
 
     fun pauseBacktracking() {
-
+        paused = !paused
     }
 
     suspend fun stopBacktracking() {
-        job?.cancelAndJoin()
-        job = null
+
+        job?.let {
+            if (it.isActive) it.cancelAndJoin()
+            job = null
+        }
+
+    }
+
+    suspend fun setNewPuzzle(puzzle: TentsAndTrees) {
+        stopBacktracking()
+
+        activePuzzle = puzzle
     }
 
     fun updateConfiguration(configuration: Configuration) {
         this.configuration = configuration
-
         csp?.applyConfiguration(ConfigurationService.toCSPConfiguration(configuration))
     }
+
+    private fun assignmentToLocationAndValue(assignment: Map<Location, Domain>): List<LocationAndValue> =
+        assignment.entries.map { e -> LocationAndValue(e.key, e.value) }
+
 
 }

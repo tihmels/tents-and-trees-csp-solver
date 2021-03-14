@@ -6,13 +6,11 @@ import de.tihmels.csp.heuristic.value.ISelectDomainHeuristic
 import de.tihmels.csp.heuristic.variable.ISelectVariableHeuristic
 import de.tihmels.csp.preprocessor.IPreProcessor
 import de.tihmels.csp.propagation.IConstraintPropagation
-import de.tihmels.server.CSPConfiguration
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.SendChannel
-import java.util.stream.Collectors
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.flow
 
 class CSP(
-    private val id: Int,
     private val variables: List<Location>,
     private val domains: Map<Location, MutableList<Domain>>,
     configuration: CSPConfiguration
@@ -20,44 +18,40 @@ class CSP(
 
     private val constraints: MutableMap<Location, MutableList<Constraint>> = HashMap()
 
+    private lateinit var preProcessor: IPreProcessor
     private lateinit var variableHeuristic: ISelectVariableHeuristic
     private lateinit var domainHeuristic: ISelectDomainHeuristic
-    private lateinit var preProcessor: IPreProcessor
     private lateinit var constraintPropagation: IConstraintPropagation
 
     private var speed = configuration.speed
         set(value) {
-            delay = linearMapping(Constants.CSP.SPEED_MIN, Constants.CSP.SPEED_MAX, Constants.CSP.DELAY_MAX, Constants.CSP.DELAY_MIN, value)
+            delay = linearMapping(
+                Constants.CSP.SPEED_MIN,
+                Constants.CSP.SPEED_MAX,
+                Constants.CSP.DELAY_MAX,
+                Constants.CSP.DELAY_MIN,
+                value
+            )
             field = value
         }
 
     private var delay = Constants.CSP.DELAY_MAX.toLong()
 
-    suspend fun backtrackingSearch(output: SendChannel<SMessage>): Map<Location, Domain>? {
+    suspend fun backtrackingSearch() = flow {
         preProcessor.process(variables, domains, constraints)
-        return backtrackingSearch(HashMap(), domains, output)
+        backtrackingSearch(HashMap(), domains)
     }
 
-    fun applyConfiguration(configuration: CSPConfiguration) {
-        preProcessor = configuration.preProcessingStrategy
-        variableHeuristic = configuration.variableStrategy
-        domainHeuristic = configuration.domainStrategy
-        constraintPropagation = configuration.constraintPropagationStrategy
-        speed = configuration.speed
-    }
-
-    private suspend fun backtrackingSearch(
+    private suspend fun FlowCollector<Map<Location, Domain>>.backtrackingSearch(
         assignment: Map<Location, Domain>,
-        domains: Map<Location, MutableList<Domain>>,
-        output: SendChannel<SMessage>
+        domains: Map<Location, MutableList<Domain>>
     ): Map<Location, Domain>? {
 
         if (assignment.size == variables.size) {
             return assignment
         }
 
-        val unassignedVariables =
-            variables.stream().filter { !assignment.containsKey(it) }.collect(Collectors.toList())
+        val unassignedVariables = variables.filter { !assignment.containsKey(it) }
 
         val unassignedVariable =
             variableHeuristic.selectVariable(unassignedVariables, domains, constraints)
@@ -77,24 +71,33 @@ class CSP(
             localAssignment[unassignedVariable] = value
 
             delay(delay)
-            output.send(SMessage(SMessageType.AssignmentUpdate(Assignment(assignmentToLocationAndValue(localAssignment)))))
+            emit(localAssignment)
 
             if (isConsistent(unassignedVariable, localAssignment)) {
 
                 val localDomains = deepCopyDomains(domains)
                 constraintPropagation.propagate(unassignedVariable, localAssignment, localDomains, constraints)
 
-                if (localDomains.values.stream().anyMatch(List<Domain>::isEmpty)) {
+                if (localDomains.values.any(List<Domain>::isEmpty)) {
                     continue
                 }
 
-                val result = backtrackingSearch(localAssignment, localDomains, output)
+                val result = backtrackingSearch(localAssignment, localDomains)
+
                 if (result != null) {
                     return result
                 }
             }
         }
         return null
+    }
+
+    fun applyConfiguration(configuration: CSPConfiguration) {
+        preProcessor = configuration.preProcessingStrategy
+        variableHeuristic = configuration.variableSelectionStrategy
+        domainHeuristic = configuration.domainSelectionStrategy
+        constraintPropagation = configuration.constraintPropagationStrategy
+        speed = configuration.speed
     }
 
     private fun deepCopyDomains(domains: Map<Location, MutableList<Domain>>): Map<Location, MutableList<Domain>> =
@@ -119,12 +122,6 @@ class CSP(
         }
 
         return true
-    }
-
-    private fun assignmentToLocationAndValue(assignment: Map<Location, Domain>): List<LocationAndValue> {
-        return assignment.entries.stream()
-            .map { e -> LocationAndValue(e.key, e.value) }
-            .collect(Collectors.toList())
     }
 
     private fun linearMapping(a: Int, b: Int, from: Int, to: Int, x: Int): Long =
