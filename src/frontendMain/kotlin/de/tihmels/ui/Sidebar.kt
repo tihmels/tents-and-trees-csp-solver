@@ -11,8 +11,7 @@ import io.kvision.utils.px
 fun Container.sidebar(init: VPanel.() -> Unit) {
 
     vPanel(spacing = 0) {
-        maxWidth = 270.px
-        minWidth = 210.px
+        width = 280.px
         init.invoke(this)
     }
 
@@ -21,11 +20,12 @@ fun Container.sidebar(init: VPanel.() -> Unit) {
 fun Container.sidebarCard(title: String, collapsible: Boolean = false, init: Div.() -> Unit) {
 
     val allowedChars = ('A'..'Z') + ('a'..'z')
-    val random = (1..10)
+    val randomId = (1..5)
         .map { allowedChars.random() }
         .joinToString("")
 
-    div(classes = setOf("card", "my-2")) {
+    div(className = "card my-2") {
+
         div(className = "card-header") {
             content = title
 
@@ -34,22 +34,21 @@ fun Container.sidebarCard(title: String, collapsible: Boolean = false, init: Div
                     text = "",
                     icon = "fas fa-caret-down",
                     style = ButtonStyle.OUTLINESECONDARY,
-                    classes = setOf("btn-sm", "shadow-none")
+                    className = "btn-sm fa-xs shadow-none"
                 ) {
 
-                    setAttribute("data-toggle", "collapse")
-                    setAttribute("data-target", "#${random}")
+                    setAttribute("data-bs-toggle", "collapse")
+                    setAttribute("data-bs-target", "#${randomId}")
 
                     border = Border(1.px, BorderStyle.HIDDEN, Color("black"))
-
                     float = PosFloat.RIGHT
                 }
             }
         }
-        div(classes = setOf("card-body", "test")) {
+        div(className = "card-body") {
 
             if (collapsible) {
-                id = random
+                id = randomId
                 addCssClass("collapse")
                 addCssClass("show")
             }
@@ -61,8 +60,8 @@ fun Container.sidebarCard(title: String, collapsible: Boolean = false, init: Div
 
 fun Container.flexBetween(label: String, init: Span.() -> Unit): Container =
     flexPanel(justify = JustifyContent.SPACEBETWEEN, alignItems = AlignItems.CENTER) {
-        span(label, classes = setOf("label", "label-default"))
-        span(classes = setOf("badge", "badge-pill", "badge-primary")) {
+        span(label, className = "label label-default")
+        span(className = "badge badge-pill badge-primary") {
             init.invoke(this)
         }
     }

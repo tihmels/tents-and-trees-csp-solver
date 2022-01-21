@@ -30,7 +30,7 @@ fun Container.actions() {
 
             }
 
-            button("Stop", classes = setOf("btn-danger")) {
+            button("Stop", className = "btn-danger") {
 
                 bind(backtrackingState) {
                     disabled = it != BacktrackingState.RUNNING

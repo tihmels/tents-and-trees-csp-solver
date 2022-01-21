@@ -32,7 +32,6 @@ class ClientHandler(private val client: Client) : Logging {
         is CMessageType.GetConfigurationData -> handleMessage(msg)
         is CMessageType.SetBacktracking -> handleMessage(msg)
         is CMessageType.SetConfiguration -> handleMessage(msg)
-        else -> throw IllegalStateException()
     }
 
     private suspend fun handleMessage(msg: CMessageType.GetPuzzle) {

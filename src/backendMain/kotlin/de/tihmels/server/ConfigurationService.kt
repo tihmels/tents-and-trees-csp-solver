@@ -1,7 +1,7 @@
 package de.tihmels.server
 
-import de.tihmels.ConfigurationData
 import de.tihmels.Configuration
+import de.tihmels.ConfigurationData
 import de.tihmels.annotation.HasName
 import de.tihmels.csp.CSPConfiguration
 import de.tihmels.csp.heuristic.value.ISelectDomainHeuristic
@@ -78,7 +78,7 @@ object ConfigurationService {
             c.constraintPropagationStrategy?.toInt()
         ).getDeclaredConstructor().newInstance()
 
-        val speed: Int = c.backtrackingSpeed ?: (speedRange.first + speedRange.second) / 2
+        val speed: Int = c.backtrackingSpeed ?: ((speedRange.first + speedRange.second) / 2)
 
         return CSPConfiguration(
             preProcessingStrategy,
@@ -97,4 +97,4 @@ object ConfigurationService {
 
 }
 
-fun <K, V> Map<out K, V>.getOrFirst(index: Int?) = getOrDefault(index, values.first())
+fun <K : Int?, V> Map<out K, V>.getOrFirst(index: Int?): V = getOrDefault(index, values.first())

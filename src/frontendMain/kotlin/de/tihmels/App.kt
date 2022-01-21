@@ -1,20 +1,16 @@
 package de.tihmels
 
 import de.tihmels.ui.*
-import io.kvision.Application
+import io.kvision.*
 import io.kvision.core.*
 import io.kvision.html.*
-import io.kvision.module
 import io.kvision.panel.flexPanel
 import io.kvision.panel.gridPanel
 import io.kvision.panel.root
-import io.kvision.require
-import io.kvision.startApplication
 import io.kvision.state.bind
 import io.kvision.state.sub
 import io.kvision.utils.perc
 import io.kvision.utils.vh
-
 
 class App : Application() {
 
@@ -44,7 +40,7 @@ class App : Application() {
     }
 
     private fun Container.header(connected: Boolean) {
-        div(classes = setOf("my-3")) {
+        div(className = "my-3") {
             flexPanel(alignItems = AlignItems.CENTER, justify = JustifyContent.SPACEBETWEEN) {
                 h1("Tents and Trees CSP Solver")
                 if (connected) {
@@ -138,5 +134,5 @@ class App : Application() {
 }
 
 fun main() {
-    startApplication(::App, module.hot)
+    startApplication(::App, module.hot, CoreModule, BootstrapModule, BootstrapCssModule, BootstrapSelectModule, FontAwesomeModule)
 }

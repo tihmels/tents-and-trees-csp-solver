@@ -4,7 +4,10 @@ import de.tihmels.Location
 import de.tihmels.PuzzleStateService
 import de.tihmels.TentsAndTrees
 import de.tihmels.Tile
-import io.kvision.core.*
+import io.kvision.core.AlignItems
+import io.kvision.core.Container
+import io.kvision.core.GridAutoFlow
+import io.kvision.core.JustifyItems
 import io.kvision.html.Div
 import io.kvision.html.div
 import io.kvision.html.image
@@ -126,7 +129,7 @@ private fun GridPanel.setLocation(location: Location, domain: Tile) {
 
 fun Container.getTile(domain: Tile): Div = when (domain) {
     Tile.EMPTY -> {
-        div(classes = setOf("border", "border-secondary")) {
+        div(className = "border border-secondary") {
             height = 100.perc
         }
     }

@@ -1,13 +1,12 @@
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     val kotlinVersion: String by System.getProperties()
-    id("kotlinx-serialization") version kotlinVersion
+    kotlin("plugin.serialization") version kotlinVersion
     kotlin("multiplatform") version kotlinVersion
     val kvisionVersion: String by System.getProperties()
-    id("kvision") version kvisionVersion
+    id("io.kvision") version kvisionVersion
 }
 
 version = "1.0.0-SNAPSHOT"
@@ -15,8 +14,6 @@ group = "de.ihmels"
 
 repositories {
     mavenCentral()
-    jcenter()
-    mavenLocal()
 }
 
 // Versions
@@ -38,6 +35,9 @@ val mainClassName = "io.ktor.server.netty.EngineMain"
 kotlin {
     jvm("backend") {
         compilations.all {
+            java {
+                targetCompatibility = JavaVersion.VERSION_1_8
+            }
             kotlinOptions {
                 jvmTarget = "1.8"
                 freeCompilerArgs = listOf("-Xjsr305=strict")
@@ -52,11 +52,11 @@ kotlin {
                 devServer = KotlinWebpackConfig.DevServer(
                     open = false,
                     port = 3000,
-                    proxy = mapOf(
+                    proxy = mutableMapOf(
                         "/kv/*" to "http://localhost:8080",
                         "/kvws/*" to mapOf("target" to "ws://localhost:8080", "ws" to true)
                     ),
-                    contentBase = listOf("$buildDir/processedResources/frontend/main")
+                    static = mutableListOf("$buildDir/processedResources/frontend/main")
                 )
             }
             webpackTask {
@@ -87,9 +87,11 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
                 implementation(kotlin("reflect"))
+                implementation("commons-codec:commons-codec:$commonsCodecVersion")
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
+                implementation("io.ktor:ktor-auth:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
-                implementation("com.opencsv:opencsv:5.3")
+                implementation("com.github.andrewoma.kwery:core:$kweryVersion")
                 implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.0")
             }
         }
@@ -103,66 +105,27 @@ kotlin {
             resources.srcDir(webDir)
             dependencies {
                 implementation("io.kvision:kvision:$kvisionVersion")
-                implementation("io.kvision:kvision-fontawesome:$kvisionVersion")
                 implementation("io.kvision:kvision-bootstrap:$kvisionVersion")
                 implementation("io.kvision:kvision-bootstrap-css:$kvisionVersion")
                 implementation("io.kvision:kvision-bootstrap-select:$kvisionVersion")
-                implementation("io.kvision:kvision-bootstrap-spinner:$kvisionVersion")
+                implementation("io.kvision:kvision-fontawesome:$kvisionVersion")
                 implementation("io.kvision:kvision-datacontainer:$kvisionVersion")
                 implementation("io.kvision:kvision-redux:$kvisionVersion")
-                implementation("io.kvision:kvision-event-flow:$kvisionVersion")
+                implementation("io.kvision:kvision-state:$kvisionVersion")
             }
             kotlin.srcDir("build/generated-src/frontend")
         }
         val frontendTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
-                implementation("io.kvision:kvision-testutils:$kvisionVersion:tests")
+                implementation("io.kvision:kvision-testutils:$kvisionVersion")
             }
         }
     }
 }
 
-fun getNodeJsBinaryExecutable(): String {
-    val nodeDir = NodeJsRootPlugin.apply(rootProject).nodeJsSetupTaskProvider.get().destination
-    val isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
-    val nodeBinDir = if (isWindows) nodeDir else nodeDir.resolve("bin")
-    val command = NodeJsRootPlugin.apply(rootProject).nodeCommand
-    val finalCommand = if (isWindows && command == "node") "node.exe" else command
-    return nodeBinDir.resolve(finalCommand).absolutePath
-}
-
-tasks {
-    create("generatePotFile", Exec::class) {
-        dependsOn("compileKotlinFrontend")
-        executable = getNodeJsBinaryExecutable()
-        args("${rootProject.buildDir}/js/node_modules/gettext-extract/bin/gettext-extract")
-        inputs.files(kotlin.sourceSets["frontendMain"].kotlin.files)
-        outputs.file("$projectDir/src/frontendMain/resources/i18n/messages.pot")
-    }
-}
 afterEvaluate {
     tasks {
-        getByName("frontendProcessResources", Copy::class) {
-            dependsOn("compileKotlinFrontend")
-            exclude("**/*.pot")
-            doLast("Convert PO to JSON") {
-                destinationDir.walkTopDown().filter {
-                    it.isFile && it.extension == "po"
-                }.forEach {
-                    exec {
-                        executable = getNodeJsBinaryExecutable()
-                        args(
-                            "${rootProject.buildDir}/js/node_modules/gettext.js/bin/po2json",
-                            it.absolutePath,
-                            "${it.parent}/${it.nameWithoutExtension}.json"
-                        )
-                        println("Converted ${it.name} to ${it.nameWithoutExtension}.json")
-                    }
-                    it.delete()
-                }
-            }
-        }
         create("frontendArchive", Jar::class).apply {
             dependsOn("frontendBrowserProductionWebpack")
             group = "package"
@@ -225,12 +188,6 @@ afterEvaluate {
                 configurations["backendRuntimeClasspath"] + project.tasks["compileKotlinBackend"].outputs.files +
                         project.tasks["backendProcessResources"].outputs.files
             workingDir = buildDir
-        }
-        getByName("compileKotlinBackend") {
-            dependsOn("compileKotlinMetadata")
-        }
-        getByName("compileKotlinFrontend") {
-            dependsOn("compileKotlinMetadata")
         }
     }
 }

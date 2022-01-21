@@ -7,7 +7,9 @@ import io.kvision.core.Container
 import io.kvision.core.StringPair
 import io.kvision.form.formPanel
 import io.kvision.form.range.Range
-import io.kvision.form.select.Select
+import io.kvision.form.select.select
+import io.kvision.form.select.simpleSelect
+
 
 fun Container.settings(configurationData: ConfigurationData) {
 
@@ -21,7 +23,10 @@ fun Container.settings(configurationData: ConfigurationData) {
                 configurationData.preProcessingStrategies.map { StringPair(it.key.toString(), it.value) }
             add(
                 Configuration::preProcessingStrategy,
-                Select(options = preProcessingStrategies, label = "Preprocessing").apply {
+                simpleSelect(
+                    options = preProcessingStrategies,
+                    label = "Preprocessing"
+                ).apply {
                     subscribe {
                         if (!it.isNullOrBlank() && isActive) {
                             ConfigurationService.updateConfiguration()
@@ -29,11 +34,11 @@ fun Container.settings(configurationData: ConfigurationData) {
                     }
                 })
 
-            val varStrategies =
+            val variableSelectionStrategies =
                 configurationData.variableSelectionStrategies.map { StringPair(it.key.toString(), it.value) }
             add(
                 Configuration::variableSelectionHeuristic,
-                Select(options = varStrategies, label = "Variable Selection Heuristic").apply {
+                simpleSelect(options = variableSelectionStrategies, label = "Variable Selection Heuristic").apply {
                     subscribe {
                         if (!it.isNullOrBlank() && isActive) {
                             ConfigurationService.updateConfiguration()
@@ -42,11 +47,11 @@ fun Container.settings(configurationData: ConfigurationData) {
                 }
             )
 
-            val domainStrategies =
+            val domainSelectionStrategies =
                 configurationData.domainSelectionStrategies.map { StringPair(it.key.toString(), it.value) }
             add(
                 Configuration::domainSelectionHeuristic,
-                Select(options = domainStrategies, label = "Domain Selection Heuristic").apply {
+                simpleSelect(options = domainSelectionStrategies, label = "Domain Selection Heuristic").apply {
                     subscribe {
                         if (!it.isNullOrBlank() && isActive) {
                             ConfigurationService.updateConfiguration()
@@ -54,11 +59,11 @@ fun Container.settings(configurationData: ConfigurationData) {
                     }
                 })
 
-            val constraintPropagation =
+            val constraintPropagationStrategies =
                 configurationData.constraintPropagationStrategies.map { StringPair(it.key.toString(), it.value) }
             add(
                 Configuration::constraintPropagationStrategy,
-                Select(options = constraintPropagation, label = "Constraint Propagation").apply {
+                simpleSelect(options = constraintPropagationStrategies, label = "Constraint Propagation").apply {
                     subscribe {
                         if (!it.isNullOrBlank() && isActive) {
                             ConfigurationService.updateConfiguration()
