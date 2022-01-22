@@ -51,7 +51,7 @@ object PuzzleStateService {
     private fun gridReducer(state: PuzzleState, action: StateAction): PuzzleState = when (action) {
         is StateAction.UpdatePuzzle -> {
             state.copy(
-                puzzle = action.puzzle, assignment = Assignment()
+                puzzle = action.puzzle, assignment = Assignment(), statistics = CSPStatistics()
             )
         }
         is StateAction.UpdateAssignment -> {

@@ -48,12 +48,13 @@ class CSP(
         backtrackingSearch(HashMap(), domains)
     }
 
-    private suspend fun FlowCollector<PuzzleStateUpdate>.backtrackingSearch(
+    private suspend fun FlowCollector<CSPStateUpdate>.backtrackingSearch(
         assignment: Map<Location, Domain>,
         domains: Map<Location, MutableList<Domain>>
     ): Map<Location, Domain>? {
 
         if (assignment.size == variables.size) {
+            emit(CSPStateUpdate(assignment, CSPStatistics(totalSteps, totalErrors, true)))
             return assignment
         }
 
@@ -73,13 +74,13 @@ class CSP(
 
         for (value in variableDomain!!) {
 
+            totalSteps++
+
             val localAssignment: MutableMap<Location, Domain> = HashMap(assignment)
             localAssignment[unassignedVariable] = value
 
-            totalSteps++
-
             delay(delay)
-            emit(PuzzleStateUpdate(localAssignment, CSPStatistics(totalSteps, totalErrors)))
+            emit(CSPStateUpdate(localAssignment, CSPStatistics(totalSteps, totalErrors)))
 
             if (isConsistent(unassignedVariable, localAssignment)) {
 

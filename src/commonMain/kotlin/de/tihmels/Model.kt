@@ -3,7 +3,7 @@ package de.tihmels
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CSPStatistics(val totalSteps: Int = 0, val totalErrors: Int = 0)
+data class CSPStatistics(val totalSteps: Int = 0, val totalErrors: Int = 0, val solved: Boolean = false)
 
 @Serializable
 data class TentsAndTrees(
