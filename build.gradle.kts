@@ -19,6 +19,7 @@ repositories {
 // Versions
 val kotlinVersion: String by System.getProperties()
 val kvisionVersion: String by System.getProperties()
+val slf4jVersion: String by project
 val ktorVersion: String by project
 val exposedVersion: String by project
 val hikariVersion: String by project
@@ -77,22 +78,15 @@ kotlin {
             }
             kotlin.srcDir("build/generated-src/common")
         }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-            }
-        }
         val backendMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
                 implementation(kotlin("reflect"))
-                implementation("commons-codec:commons-codec:$commonsCodecVersion")
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
-                implementation("io.ktor:ktor-auth:$ktorVersion")
+                implementation("commons-codec:commons-codec:$commonsCodecVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
-                implementation("com.github.andrewoma.kwery:core:$kweryVersion")
-                implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.0")
+                implementation("org.slf4j:slf4j-api:$slf4jVersion")
+                implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.2.0")
             }
         }
         val backendTest by getting {
@@ -131,7 +125,10 @@ afterEvaluate {
             group = "package"
             archiveAppendix.set("frontend")
             val distribution =
-                project.tasks.getByName("frontendBrowserProductionWebpack", KotlinWebpack::class).destinationDirectory!!
+                project.tasks.getByName(
+                    "frontendBrowserProductionWebpack",
+                    KotlinWebpack::class
+                ).destinationDirectory
             from(distribution) {
                 include("*.*")
             }

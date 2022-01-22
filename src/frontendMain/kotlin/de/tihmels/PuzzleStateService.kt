@@ -6,6 +6,7 @@ import io.kvision.redux.createReduxStore
 data class PuzzleState(
     val puzzle: TentsAndTrees? = null,
     val assignment: Assignment? = null,
+    val statistics: CSPStatistics = CSPStatistics(),
     val backtracking: BacktrackingState? = null
 )
 
@@ -25,6 +26,10 @@ object PuzzleStateService {
         this.puzzleState.dispatch(StateAction.UpdateBacktracking(state))
     }
 
+    fun updateAssignmentState(assignment: Assignment, statistics: CSPStatistics) {
+        this.puzzleState.dispatch(StateAction.UpdateAssignmentState(assignment, statistics))
+    }
+
     fun getCurrentProgressInPercent(): Float {
         val numberOfVariables = this.puzzleState.getState().puzzle?.variables?.size
         val numberOfAssignments = this.puzzleState.getState().assignment?.assignments?.size
@@ -40,13 +45,13 @@ object PuzzleStateService {
         data class UpdateBacktracking(val state: BacktrackingState) : StateAction()
         data class UpdatePuzzle(val puzzle: TentsAndTrees) : StateAction()
         data class UpdateAssignment(val assignment: Assignment) : StateAction()
+        class UpdateAssignmentState(val assignment: Assignment, val statistics: CSPStatistics) : StateAction()
     }
 
     private fun gridReducer(state: PuzzleState, action: StateAction): PuzzleState = when (action) {
         is StateAction.UpdatePuzzle -> {
             state.copy(
-                puzzle = action.puzzle,
-                assignment = Assignment()
+                puzzle = action.puzzle, assignment = Assignment()
             )
         }
         is StateAction.UpdateAssignment -> {
@@ -56,6 +61,9 @@ object PuzzleStateService {
         }
         is StateAction.UpdateBacktracking -> {
             state.copy(backtracking = action.state)
+        }
+        is StateAction.UpdateAssignmentState -> {
+            state.copy(assignment = action.assignment, statistics = action.statistics)
         }
     }
 

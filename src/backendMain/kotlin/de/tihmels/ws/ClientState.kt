@@ -10,7 +10,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 
@@ -51,12 +50,12 @@ class ClientState(
             val flow = csp.backtrackingSearch()
 
             job = flow
+                .onEach {
+                    val assignment = Assignment(assignmentToLocationAndValue(it.assignment))
+                    output.send(SMessage(SMessageType.AssignmentStateUpdate(assignment, it.statistics)))
+                }
                 .onCompletion {
                     output.send(SMessage(SMessageType.BacktrackingUpdate(BacktrackingState.STOPPED)))
-                }
-                .map { assignmentToLocationAndValue(it) }
-                .onEach {
-                    output.send(SMessage(SMessageType.AssignmentUpdate(Assignment(it))))
                 }
                 .launchIn(scope)
 

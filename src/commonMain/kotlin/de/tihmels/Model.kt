@@ -3,6 +3,9 @@ package de.tihmels
 import kotlinx.serialization.Serializable
 
 @Serializable
+data class CSPStatistics(val totalSteps: Int = 0, val totalErrors: Int = 0)
+
+@Serializable
 data class TentsAndTrees(
     val id: Int? = null,
     val rows: Int? = null,
@@ -93,6 +96,9 @@ sealed class SMessageType {
 
     @Serializable
     data class ConfigurationDataUpdate(val configurationData: ConfigurationData) : SMessageType()
+
+    @Serializable
+    data class AssignmentStateUpdate(val assignment: Assignment, val statistics: CSPStatistics) : SMessageType()
 
     @Serializable
     data class AssignmentUpdate(val assignment: Assignment) : SMessageType()

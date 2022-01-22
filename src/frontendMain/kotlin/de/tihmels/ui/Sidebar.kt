@@ -58,7 +58,7 @@ fun Container.sidebarCard(title: String, collapsible: Boolean = false, init: Div
     }
 }
 
-fun Container.flexBetween(label: String, init: Span.() -> Unit): Container =
+fun Container.flexBetweenBadge(label: String, init: Span.() -> Unit): Container =
     flexPanel(justify = JustifyContent.SPACEBETWEEN, alignItems = AlignItems.CENTER) {
         span(label, className = "label label-default")
         span(className = "badge badge-pill badge-primary") {

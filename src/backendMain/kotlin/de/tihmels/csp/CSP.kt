@@ -23,6 +23,9 @@ class CSP(
     private lateinit var domainHeuristic: ISelectDomainHeuristic
     private lateinit var constraintPropagation: IConstraintPropagation
 
+    private var totalSteps: Int = 0
+    private var totalErrors: Int = 0
+
     private var speed = configuration.speed
         set(value) {
             delay = linearMapping(
@@ -38,11 +41,14 @@ class CSP(
     private var delay = Constants.CSP.DELAY_MAX.toLong()
 
     suspend fun backtrackingSearch() = flow {
+        totalSteps = 0
+        totalErrors = 0
+
         preProcessor.process(variables, domains, constraints)
         backtrackingSearch(HashMap(), domains)
     }
 
-    private suspend fun FlowCollector<Map<Location, Domain>>.backtrackingSearch(
+    private suspend fun FlowCollector<PuzzleStateUpdate>.backtrackingSearch(
         assignment: Map<Location, Domain>,
         domains: Map<Location, MutableList<Domain>>
     ): Map<Location, Domain>? {
@@ -70,8 +76,10 @@ class CSP(
             val localAssignment: MutableMap<Location, Domain> = HashMap(assignment)
             localAssignment[unassignedVariable] = value
 
+            totalSteps++
+
             delay(delay)
-            emit(localAssignment)
+            emit(PuzzleStateUpdate(localAssignment, CSPStatistics(totalSteps, totalErrors)))
 
             if (isConsistent(unassignedVariable, localAssignment)) {
 
@@ -89,6 +97,7 @@ class CSP(
                 }
             }
         }
+
         return null
     }
 
@@ -117,6 +126,7 @@ class CSP(
 
         for (constraint in constraints!!) {
             if (!constraint.satisfied(assignment)) {
+                totalErrors++
                 return false
             }
         }
