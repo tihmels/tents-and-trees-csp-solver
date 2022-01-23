@@ -5,7 +5,7 @@ import de.tihmels.Location
 import de.tihmels.csp.constraint.Constraint
 import de.tihmels.annotation.HasName
 
-@HasName("Random Value")
+@HasName("Random Values")
 class RandomValueOrderHeuristic : ISelectDomainHeuristic {
     override fun chooseDomains(
         variable: Location,

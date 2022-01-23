@@ -2,16 +2,16 @@ package de.tihmels.csp.heuristic.variable.compound
 
 import de.tihmels.Domain
 import de.tihmels.Location
+import de.tihmels.annotation.HasName
 import de.tihmels.csp.constraint.Constraint
 import de.tihmels.csp.heuristic.variable.ISelectVariableHeuristic
 import de.tihmels.csp.heuristic.variable.MinimumRemainingValuesHeuristic
 import de.tihmels.csp.heuristic.variable.MostConstrainingVariableHeuristic
-import de.tihmels.annotation.HasName
 
 @HasName("Most Constraining Tie Breaker")
 class MostConstrainingVariableTieBreakerHeuristic : ISelectVariableHeuristic {
 
-    private val minimumRemainingValues: MinimumRemainingValuesHeuristic = MinimumRemainingValuesHeuristic()
+    private val minimumRemainingValuesHeuristic: MinimumRemainingValuesHeuristic = MinimumRemainingValuesHeuristic()
     private val mostConstrainingVariableHeuristic: MostConstrainingVariableHeuristic =
         MostConstrainingVariableHeuristic()
 
@@ -25,7 +25,7 @@ class MostConstrainingVariableTieBreakerHeuristic : ISelectVariableHeuristic {
         ) {
             mostConstrainingVariableHeuristic.selectVariable(unassignedVariables, domains, constraints)
         } else {
-            minimumRemainingValues.selectVariable(unassignedVariables, domains, constraints)
+            minimumRemainingValuesHeuristic.selectVariable(unassignedVariables, domains, constraints)
         }
     }
 }

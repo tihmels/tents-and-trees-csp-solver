@@ -2,17 +2,16 @@ package de.tihmels.csp.heuristic.variable
 
 import de.tihmels.Domain
 import de.tihmels.Location
-import de.tihmels.csp.constraint.Constraint
 import de.tihmels.annotation.HasName
+import de.tihmels.csp.constraint.Constraint
 
-@HasName("First Unassigned Variable")
-class SelectFirstUnassignedVariableHeuristic : ISelectVariableHeuristic {
+@HasName("Most Constraining Variable")
+class RandomVariableHeuristic : ISelectVariableHeuristic {
+
     override fun selectVariable(
         unassignedVariables: List<Location>,
         domains: Map<Location, List<Domain>>,
         constraints: Map<Location, List<Constraint>>
-    ): Location {
-        return unassignedVariables.stream().findFirst().orElse(null)
-    }
+    ): Location = unassignedVariables.random()
 
 }

@@ -5,7 +5,7 @@ import de.tihmels.Location
 import de.tihmels.csp.constraint.Constraint
 import de.tihmels.annotation.HasName
 
-@HasName("No Preprocessing")
+@HasName("None")
 class NoPreProcessing : IPreProcessor {
 
     override fun process(

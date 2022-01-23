@@ -5,7 +5,7 @@ import de.tihmels.Location
 import de.tihmels.csp.constraint.Constraint
 import de.tihmels.annotation.HasName
 
-@HasName("Lexicographic")
+@HasName("Lexicographic Values")
 class LexicographicDomainOrderHeuristic : ISelectDomainHeuristic {
     override fun chooseDomains(
         variable: Location,

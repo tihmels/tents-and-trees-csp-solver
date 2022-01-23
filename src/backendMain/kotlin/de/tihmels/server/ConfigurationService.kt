@@ -8,10 +8,7 @@ import de.tihmels.csp.heuristic.value.ISelectDomainHeuristic
 import de.tihmels.csp.heuristic.value.LeastConstrainingValueOrderHeuristic
 import de.tihmels.csp.heuristic.value.LexicographicDomainOrderHeuristic
 import de.tihmels.csp.heuristic.value.RandomValueOrderHeuristic
-import de.tihmels.csp.heuristic.variable.ISelectVariableHeuristic
-import de.tihmels.csp.heuristic.variable.MinimumRemainingValuesHeuristic
-import de.tihmels.csp.heuristic.variable.MostConstrainingVariableHeuristic
-import de.tihmels.csp.heuristic.variable.SelectFirstUnassignedVariableHeuristic
+import de.tihmels.csp.heuristic.variable.*
 import de.tihmels.csp.heuristic.variable.compound.MostConstrainingVariableTieBreakerHeuristic
 import de.tihmels.csp.preprocessor.IPreProcessor
 import de.tihmels.csp.preprocessor.NoPreProcessing
@@ -24,32 +21,33 @@ import de.tihmels.csp.propagation.TentsAndTreesForwardChecking
 object ConfigurationService {
 
     private val preProcessingStrategies: Map<Int, Class<out IPreProcessor>> =
-        mapOf(
-            0 to NoPreProcessing::class.java,
-            1 to TentsAndTreesPreProcessor::class.java
-        )
+        listOf(
+            NoPreProcessing::class.java,
+            TentsAndTreesPreProcessor::class.java
+        ).mapByIndex()
 
     private val variableSelectionStrategies: Map<Int, Class<out ISelectVariableHeuristic>> =
-        mapOf(
-            0 to SelectFirstUnassignedVariableHeuristic::class.java,
-            1 to MinimumRemainingValuesHeuristic::class.java,
-            2 to MostConstrainingVariableHeuristic::class.java,
-            3 to MostConstrainingVariableTieBreakerHeuristic::class.java
-        )
+        listOf(
+            SelectFirstUnassignedVariableHeuristic::class.java,
+            RandomVariableHeuristic::class.java,
+            MinimumRemainingValuesHeuristic::class.java,
+            MostConstrainingVariableHeuristic::class.java,
+            MostConstrainingVariableTieBreakerHeuristic::class.java
+        ).mapByIndex()
 
     private val domainSelectionStrategies: Map<Int, Class<out ISelectDomainHeuristic>> =
-        mapOf(
-            0 to LexicographicDomainOrderHeuristic::class.java,
-            1 to RandomValueOrderHeuristic::class.java,
-            2 to LeastConstrainingValueOrderHeuristic::class.java
-        )
+        listOf(
+            LexicographicDomainOrderHeuristic::class.java,
+            RandomValueOrderHeuristic::class.java,
+            LeastConstrainingValueOrderHeuristic::class.java
+        ).mapByIndex()
 
     private val constraintPropagationStrategies: Map<Int, Class<out IConstraintPropagation>> =
-        mapOf(
-            0 to NoConstraintPropagation::class.java,
-            1 to ForwardChecking::class.java,
-            2 to TentsAndTreesForwardChecking::class.java
-        )
+        listOf(
+            NoConstraintPropagation::class.java,
+            ForwardChecking::class.java,
+            TentsAndTreesForwardChecking::class.java
+        ).mapByIndex()
 
     private val speedRange = Pair(1, 10)
 
@@ -96,5 +94,17 @@ object ConfigurationService {
     }
 
 }
+
+private val variableSelectionStrategies: Map<Int, Class<out ISelectVariableHeuristic>> =
+    listOf(
+        SelectFirstUnassignedVariableHeuristic::class.java,
+        RandomVariableHeuristic::class.java,
+        MinimumRemainingValuesHeuristic::class.java,
+        MostConstrainingVariableHeuristic::class.java,
+        MostConstrainingVariableTieBreakerHeuristic::class.java
+    ).mapIndexed { index, clazz -> index to clazz }.toMap()
+
+
+fun <K> List<K>.mapByIndex(): Map<Int, K> = mapIndexed { index, k -> index to k }.toMap()
 
 fun <K : Int?, V> Map<out K, V>.getOrFirst(index: Int?): V = getOrDefault(index, values.first())
