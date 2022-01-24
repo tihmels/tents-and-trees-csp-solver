@@ -3,12 +3,7 @@ package de.tihmels
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CSPStatistics(
-    val totalSteps: Int = 0,
-    val totalErrors: Int = 0,
-    val deadEnds: Int = 0,
-    val solved: Boolean = false
-)
+data class Location(val row: Int, val column: Int)
 
 @Serializable
 data class TentsAndTrees(
@@ -22,18 +17,9 @@ data class TentsAndTrees(
 )
 
 @Serializable
-data class Location(val row: Int, val column: Int)
-
-@Serializable
-enum class BacktrackingState {
-    STOPPED, RUNNING, PAUSED
+enum class Tile {
+    EMPTY, GRASS, TENT, TREE;
 }
-
-@Serializable
-data class LocationAndValue(val location: Location, val domain: Domain)
-
-@Serializable
-data class Assignment(val assignments: List<LocationAndValue> = emptyList())
 
 @Serializable
 enum class Domain {
@@ -42,15 +28,23 @@ enum class Domain {
     val isTent: Boolean
         get() = this == TENT_TO_TOP || this == TENT_TO_RIGHT || this == TENT_TO_BOTTOM || this == TENT_TO_LEFT
 
-    fun toTile(): Tile =
-        if (isTent) Tile.TENT else Tile.GRASS
+    fun toTile(): Tile = if (isTent) Tile.TENT else Tile.GRASS
 
 }
 
 @Serializable
-enum class Tile {
-    EMPTY, GRASS, TENT, TREE;
-}
+data class LocationAndValue(val location: Location, val value: Domain)
+
+@Serializable
+data class Assignment(val assignments: List<LocationAndValue> = emptyList())
+
+@Serializable
+data class CSPStatistics(
+    val totalSteps: Int = 0,
+    val totalErrors: Int = 0,
+    val deadEnds: Int = 0,
+    val solved: Boolean = false
+)
 
 @Serializable
 data class ConfigurationData(
@@ -71,6 +65,11 @@ data class Configuration(
 )
 
 @Serializable
+enum class BacktrackingState {
+    STOPPED, RUNNING, PAUSED
+}
+
+@Serializable
 data class CMessage(val messageType: CMessageType)
 
 @Serializable
@@ -83,10 +82,10 @@ sealed class CMessageType {
     object GetPuzzle : CMessageType()
 
     @Serializable
-    object GetConfigurationData : CMessageType()
+    object FetchConfigurationData : CMessageType()
 
     @Serializable
-    data class SetBacktracking(val backtracking: BacktrackingState) : CMessageType()
+    data class SetBacktrackingState(val backtracking: BacktrackingState) : CMessageType()
 
     @Serializable
     data class SetConfiguration(val configuration: Configuration) : CMessageType()
@@ -106,6 +105,6 @@ sealed class SMessageType {
     data class AssignmentStateUpdate(val assignment: Assignment, val statistics: CSPStatistics) : SMessageType()
 
     @Serializable
-    data class BacktrackingUpdate(val state: BacktrackingState) : SMessageType()
+    data class BacktrackingStateUpdate(val state: BacktrackingState) : SMessageType()
 
 }

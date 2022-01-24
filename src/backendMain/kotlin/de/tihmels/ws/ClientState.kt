@@ -55,7 +55,7 @@ class ClientState(
                     output.send(SMessage(SMessageType.AssignmentStateUpdate(assignment, it.statistics)))
                 }
                 .onCompletion {
-                    output.send(SMessage(SMessageType.BacktrackingUpdate(BacktrackingState.STOPPED)))
+                    output.send(SMessage(SMessageType.BacktrackingStateUpdate(BacktrackingState.STOPPED)))
                 }
                 .launchIn(scope)
 

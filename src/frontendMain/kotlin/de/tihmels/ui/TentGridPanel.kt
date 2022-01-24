@@ -101,7 +101,7 @@ private fun GridPanel.innerGrid(puzzle: TentsAndTrees) {
                 }
 
                 for (location in puzzle.variables) {
-                    val tile = a?.assignments?.find { it.location == location }?.domain?.toTile()
+                    val tile = a?.assignments?.find { it.location == location }?.value?.toTile()
                         ?: Tile.EMPTY
 
                     setLocation(

@@ -29,8 +29,8 @@ class ClientHandler(private val client: Client) : Logging {
 
     private suspend fun handle(msg: CMessageType) = when (msg) {
         is CMessageType.GetPuzzle -> handleMessage(msg)
-        is CMessageType.GetConfigurationData -> handleMessage(msg)
-        is CMessageType.SetBacktracking -> handleMessage(msg)
+        is CMessageType.FetchConfigurationData -> handleMessage(msg)
+        is CMessageType.SetBacktrackingState -> handleMessage(msg)
         is CMessageType.SetConfiguration -> handleMessage(msg)
     }
 
@@ -47,7 +47,7 @@ class ClientHandler(private val client: Client) : Logging {
         )
     }
 
-    private suspend fun handleMessage(msg: CMessageType.GetConfigurationData) {
+    private suspend fun handleMessage(msg: CMessageType.FetchConfigurationData) {
         client.send(
             ConfigurationDataUpdate(
                 ConfigurationService.toCData()
@@ -59,7 +59,7 @@ class ClientHandler(private val client: Client) : Logging {
         clientState.updateConfiguration(msg.configuration)
     }
 
-    private suspend fun handleMessage(msg: CMessageType.SetBacktracking) = when (msg.backtracking) {
+    private suspend fun handleMessage(msg: CMessageType.SetBacktrackingState) = when (msg.backtracking) {
         BacktrackingState.RUNNING -> startBacktracking()
         BacktrackingState.PAUSED -> pauseBacktracking()
         BacktrackingState.STOPPED -> stopBacktracking()
@@ -70,18 +70,18 @@ class ClientHandler(private val client: Client) : Logging {
         clientState.setupCSP()
         clientState.startBacktracking()
 
-        client.send(BacktrackingUpdate(BacktrackingState.RUNNING))
+        client.send(BacktrackingStateUpdate(BacktrackingState.RUNNING))
     }
 
     private suspend fun pauseBacktracking() {
         clientState.pauseBacktracking()
 
-        client.send(BacktrackingUpdate(BacktrackingState.PAUSED))
+        client.send(BacktrackingStateUpdate(BacktrackingState.PAUSED))
     }
 
     private suspend fun stopBacktracking() {
         clientState.stopBacktracking()
 
-        client.send(BacktrackingUpdate(BacktrackingState.STOPPED))
+        client.send(BacktrackingStateUpdate(BacktrackingState.STOPPED))
     }
 }

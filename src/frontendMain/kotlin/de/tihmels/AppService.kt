@@ -11,11 +11,11 @@ object AppService {
     fun connectToServer() = websocketHandler.connect()
 
     fun setBacktracking(backtracking: BacktrackingState) =
-        websocketHandler.send(CMessage(CMessageType.SetBacktracking(backtracking)))
+        websocketHandler.send(CMessage(CMessageType.SetBacktrackingState(backtracking)))
 
     fun getPuzzle() = websocketHandler.send(CMessage(CMessageType.GetPuzzle))
 
-    fun getConfigurationData() = websocketHandler.send(CMessage(CMessageType.GetConfigurationData))
+    fun getConfigurationData() = websocketHandler.send(CMessage(CMessageType.FetchConfigurationData))
 
 }
 
