@@ -31,7 +31,7 @@ function recursive-backtracking(assignment, csp):
         return assignment
     
     variable <- select-unassigned-variable(assignment, csp)
-    values <- order-domain-values(variable, assignment, csp)
+    values <- order-domain-values(variable, csp)
     
     for each value in values:
         if isConsistent(variable, value, csp):
