@@ -12,10 +12,13 @@ The objective is to place a tent for each tree so that the following conditions 
 * in each row and column there are as many tents as the number in the margin indicates
 * two tents may not stand next to each other, not even diagonally
 
-Each other cell, where there is no tent, is covered with grass.
+![Tents and Trees Example](img/tat-example.png)
 
-![Example Tents and Trees](https://github.com/tihmels/
-tents-and-trees-csp-solver/blob/main/img/tat-example.png?raw=true)
+<details>
+  <summary>Solution</summary>
+
+![Tents and Trees Solution](img/tat-example-solution.png)
+</details>
 
 ## CSP
 
