@@ -55,11 +55,44 @@ function recursive-backtracking(assignment, csp):
     
 ```
 
-In its most basic implementation, the backtracking algorithm resembles a fairly naive brute-force approach. 
+In its most basic form, the backtracking algorithm resembles a fairly naive brute-force approach. 
 However, there are various heuristics for improving the CSP performance and possibly decreasing search effort.
 
 ## Heuristics
 
+### Variable Selection Heuristics
+_These heuristics influence which variable is selected next._
+
+#### RandomVariableHeuristic
+Selects a random variable that has not yet been assigned.
+
+#### SelectFirstUnassignedVariableHeuristic
+Selects the first variable in the list that has not yet been assigned.
+
+#### MinimumRemainingValuesHeuristic
+The unassigned variable with the fewest possible remaining values is selected. 
+This is used to reduce the probability of a failed assignment attempt.
+
+#### MostConstrainingVariableHeuristic
+The unassigned variable which, with its possible assinments, exerts the most constraints on other variables. 
+This is used to find possible failures as early as possible.
+
+Further, combinations of heuristics can be used, such as
+
+#### MostConstrainingVariableTieBreakerHeuristic
+A combination of `MinimumRemainingValuesHeuristic` and `MostConstrainingVariableHeuristic`. 
+Here the MostConstrainingVariableHeuristic decides when the MRV heuristic has no information.
+
+### Value Selection Heuristics
+
+#### RandomValueOrderHeuristic
+Selects a random value from the domain.
+
+#### LexicographicDomainOrderHeuristic
+The first value in the series of possible values is selected.
+
+#### LeastConstrainingValueOrderHeuristic
+The value that triggers the fewest constraints on other variables is selected.
 
 ## Gradle Tasks
 
