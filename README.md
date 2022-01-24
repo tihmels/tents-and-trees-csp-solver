@@ -56,7 +56,7 @@ function recursive-backtracking(assignment, csp):
 ```
 
 In its most basic implementation, the backtracking algorithm resembles a fairly naive brute-force approach. 
-However, there are various heuristics for improving the CSP performance and decreasing search effort.
+However, there are various heuristics for improving the CSP performance and possibly decreasing search effort.
 
 ## Heuristics
 
