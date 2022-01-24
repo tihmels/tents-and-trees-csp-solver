@@ -13,7 +13,7 @@ object AppService {
     fun setBacktracking(backtracking: BacktrackingState) =
         websocketHandler.send(CMessage(CMessageType.SetBacktrackingState(backtracking)))
 
-    fun getPuzzle() = websocketHandler.send(CMessage(CMessageType.GetPuzzle))
+    fun getPuzzle(id: Int = -1) = websocketHandler.send(CMessage(CMessageType.GetPuzzle(id)))
 
     fun getConfigurationData() = websocketHandler.send(CMessage(CMessageType.FetchConfigurationData))
 

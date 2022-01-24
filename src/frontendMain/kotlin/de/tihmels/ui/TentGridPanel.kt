@@ -1,7 +1,7 @@
 package de.tihmels.ui
 
 import de.tihmels.Location
-import de.tihmels.PuzzleStateService
+import de.tihmels.ClientStateService
 import de.tihmels.TentsAndTrees
 import de.tihmels.Tile
 import io.kvision.core.AlignItems
@@ -92,7 +92,7 @@ private fun GridPanel.innerGrid(puzzle: TentsAndTrees) {
             gridAutoRows = "1fr"
             gridAutoColumns = "1fr"
 
-            val assignment = PuzzleStateService.puzzleState.sub { it.assignment }
+            val assignment = ClientStateService.puzzleState.sub { it.assignment }
 
             bind(assignment) { a ->
 

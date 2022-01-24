@@ -8,15 +8,15 @@ fun messageHandler(message: SMessageType) = when (message) {
 }
 
 private fun handleMessage(msg: SMessageType.AssignmentStateUpdate) {
-    PuzzleStateService.updateAssignmentState(msg.assignment, msg.statistics)
+    ClientStateService.updateAssignmentState(msg.assignment, msg.statistics)
 }
 
 private fun handleMessage(msg: SMessageType.PuzzleUpdate) {
-    PuzzleStateService.updatePuzzle(msg.puzzle)
+    ClientStateService.updatePuzzle(msg.puzzle)
 }
 
 private fun handleMessage(msg: SMessageType.BacktrackingStateUpdate) {
-    PuzzleStateService.updateState(msg.state)
+    ClientStateService.updateBacktrackingState(msg.state)
 }
 
 private fun handleMessage(msg: SMessageType.ConfigurationDataUpdate) {

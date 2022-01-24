@@ -3,7 +3,7 @@ package de.tihmels.ui
 import de.tihmels.AppService
 import de.tihmels.BacktrackingState
 import de.tihmels.ConfigurationService
-import de.tihmels.PuzzleStateService
+import de.tihmels.ClientStateService
 import io.kvision.core.Container
 import io.kvision.core.JustifyContent
 import io.kvision.html.button
@@ -15,7 +15,7 @@ fun Container.actions() {
 
     sidebarCard("Actions") {
 
-        val backtrackingState = PuzzleStateService.puzzleState.sub { it.backtracking }
+        val backtrackingState = ClientStateService.puzzleState.sub { it.backtracking }
 
         flexPanel(justify = JustifyContent.SPACEEVENLY) {
 
@@ -26,7 +26,7 @@ fun Container.actions() {
                 }
 
                 onClick {
-                    //ConfigurationService.updateConfiguration()
+                    ConfigurationService.updateConfiguration()
                     AppService.setBacktracking(BacktrackingState.RUNNING)
                 }
 

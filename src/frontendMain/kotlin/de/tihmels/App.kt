@@ -56,9 +56,9 @@ class App : Application() {
                 div(className = "custom-progress-bar") {
                     span(className = "custom-progress-bar-fill") {
                         style {
-                            val assignments = PuzzleStateService.puzzleState.sub { it.assignment }
+                            val assignments = ClientStateService.puzzleState.sub { it.assignment }
                             bind(assignments) {
-                                val progressInPercent = PuzzleStateService.getCurrentProgressInPercent()
+                                val progressInPercent = ClientStateService.getCurrentProgressInPercent()
                                 width = progressInPercent.perc
 
                                 if (progressInPercent == 100F) {
@@ -85,7 +85,7 @@ class App : Application() {
             templateRows = "auto",
         ) {
 
-            val puzzleStore = PuzzleStateService.puzzleState.sub { it.puzzle }
+            val puzzleStore = ClientStateService.puzzleState.sub { it.puzzle }
 
             div().bind(puzzleStore) {
                 tentGrid(it)

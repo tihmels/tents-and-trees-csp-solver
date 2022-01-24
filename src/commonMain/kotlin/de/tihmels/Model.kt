@@ -79,10 +79,10 @@ data class SMessage(val messageType: SMessageType)
 sealed class CMessageType {
 
     @Serializable
-    object GetPuzzle : CMessageType()
+    object FetchConfigurationData : CMessageType()
 
     @Serializable
-    object FetchConfigurationData : CMessageType()
+    data class GetPuzzle(val id: Int) : CMessageType()
 
     @Serializable
     data class SetBacktrackingState(val backtracking: BacktrackingState) : CMessageType()

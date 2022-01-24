@@ -3,22 +3,22 @@ package de.tihmels
 import io.kvision.redux.RAction
 import io.kvision.redux.createReduxStore
 
-data class PuzzleState(
+data class ClientState(
     val puzzle: TentsAndTrees? = null,
     val assignment: Assignment? = null,
-    val statistics: CSPStatistics = CSPStatistics(),
-    val backtracking: BacktrackingState? = null
+    val backtracking: BacktrackingState? = null,
+    val statistics: CSPStatistics? = null,
 )
 
-object PuzzleStateService {
+object ClientStateService {
 
-    val puzzleState = createReduxStore(::gridReducer, PuzzleState())
+    val puzzleState = createReduxStore(::gridReducer, ClientState())
 
     fun updatePuzzle(puzzle: TentsAndTrees) {
         this.puzzleState.dispatch(StateAction.UpdatePuzzle(puzzle))
     }
 
-    fun updateState(state: BacktrackingState) {
+    fun updateBacktrackingState(state: BacktrackingState) {
         this.puzzleState.dispatch(StateAction.UpdateBacktracking(state))
     }
 
@@ -43,7 +43,7 @@ object PuzzleStateService {
         class UpdateAssignmentState(val assignment: Assignment, val statistics: CSPStatistics) : StateAction()
     }
 
-    private fun gridReducer(state: PuzzleState, action: StateAction): PuzzleState = when (action) {
+    private fun gridReducer(state: ClientState, action: StateAction): ClientState = when (action) {
         is StateAction.UpdatePuzzle -> {
             state.copy(
                 puzzle = action.puzzle, assignment = Assignment(), statistics = CSPStatistics()
