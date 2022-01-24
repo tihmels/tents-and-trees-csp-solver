@@ -1,16 +1,21 @@
 # Tents and Trees CSP Solver
 
-A constraint-satisfaction problem (CSP) solver for _Tents & Trees_ logic puzzles written in pure Kotlin and designed as
-a websocket based client-server application.
+A constraint-satisfaction problem (CSP) solver for _Tents & Trees_ logic puzzles.
+The project is written exclusively in Kotlin and implemented as a websocket-based client-server application using the [KVision](https://github.com/rjaros/kvision) web framework.
 
 ## Tents & Trees
 
-Invented in 1989 by Leon Balmaekers, Tents & Trees is about the proper placement of tents on a rectangular grid
-containing some trees. The goal is to place a tent for each tree so that the following conditions are met:
+Invented in 1989 by Leon Balmaekers, Tents & Trees is about the correct placement of tents on a rectangular grid containing some trees.
+The objective is to place a tent for each tree so that the following conditions are met:
 
-* the tent stands horizontally or vertically next to its corresponding tree.
-* in each row and column there are as many tents as the number in the margin indicates.
-* two tents may not stand next to each other, not even diagonally.
+* the tent stands horizontally or vertically next to its corresponding tree
+* in each row and column there are as many tents as the number in the margin indicates
+* two tents may not stand next to each other, not even diagonally
+
+Each other cell, where there is no tent, is covered with grass.
+
+![Example Tents and Trees](https://github.com/tihmels/
+tents-and-trees-csp-solver/blob/main/img/tat-example.png?raw=true)
 
 ## CSP
 
