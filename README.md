@@ -12,12 +12,12 @@ The objective is to place a tent for each tree so that the following conditions 
 * in each row and column there are as many tents as the number in the margin indicates
 * two tents may not stand next to each other, not even diagonally
 
-<img src="img/tat-example.png" alt="Example Tents & Trees" width="300"/>
+<img src="img/tat-example.png" alt="Example Tents & Trees" width="360"/>
 
 <details>
   <summary>Solution</summary>
 
-  <img src="img/tat-example-solution.png" alt="Example Tents & Trees" width="300"/>
+  <img src="img/tat-example-solution.png" alt="Example Tents & Trees" width="360"/>
 </details>
 
 ## CSP
