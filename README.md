@@ -1,7 +1,7 @@
 # Tents and Trees CSP Solver
 
 A constraint-satisfaction problem (CSP) solver for _Tents & Trees_ logic puzzles.
-The project is written exclusively in Kotlin and implemented as a websocket-based client-server application using the [KVision](https://github.com/rjaros/kvision) web framework.
+The project is written entirely in Kotlin and implemented as a websocket-based client-server application using the [KVision](https://github.com/rjaros/kvision) web framework.
 
 ## Tents & Trees
 
