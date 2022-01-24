@@ -2,6 +2,7 @@ package de.tihmels.ui
 
 import de.tihmels.AppService
 import de.tihmels.BacktrackingState
+import de.tihmels.ConfigurationService
 import de.tihmels.PuzzleStateService
 import io.kvision.core.Container
 import io.kvision.core.JustifyContent
@@ -25,6 +26,7 @@ fun Container.actions() {
                 }
 
                 onClick {
+                    //ConfigurationService.updateConfiguration()
                     AppService.setBacktracking(BacktrackingState.RUNNING)
                 }
 

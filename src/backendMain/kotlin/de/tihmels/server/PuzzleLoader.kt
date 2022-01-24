@@ -10,16 +10,16 @@ import java.nio.file.Paths
 
 object PuzzleLoader {
 
-    val puzzles: ImmutableList<TentsAndTrees>
+    val puzzles: List<TentsAndTrees>
 
     private val resourcesRoot = Constants.Resource.RESOURCES_ROOT
-    private const val puzzleFolder = Constants.Resource.FOLDER
+    private const val puzzleFolder = Constants.Resource.PUZZLE_FOLDER
 
     init {
 
-        val projectDirAbsolutePath = Paths.get(resourcesRoot).toAbsolutePath()
+        val resourcesPathAbsolute = Paths.get(resourcesRoot).toAbsolutePath()
         val resourcesPath =
-            Paths.get(projectDirAbsolutePath.toString(), "processedResources/backend/main/$puzzleFolder")
+            Paths.get(resourcesPathAbsolute.toString(), "processedResources/backend/main/$puzzleFolder")
 
         puzzles = Files.walk(resourcesPath)
             .filter(Files::isRegularFile)

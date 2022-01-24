@@ -13,7 +13,7 @@ object Constants {
 
     class Resource private constructor() {
         companion object {
-            const val FOLDER = "testPuzzles/"
+            const val PUZZLE_FOLDER = "testPuzzles/"
             val RESOURCES_ROOT = System.getenv("RROOT") ?: ""
         }
     }

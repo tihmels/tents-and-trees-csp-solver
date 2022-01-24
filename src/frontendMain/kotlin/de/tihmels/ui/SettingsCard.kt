@@ -7,11 +7,9 @@ import io.kvision.core.Container
 import io.kvision.core.StringPair
 import io.kvision.form.formPanel
 import io.kvision.form.range.Range
-import io.kvision.form.select.select
-import io.kvision.form.select.simpleSelect
+import io.kvision.form.select.SimpleSelect
 
-
-fun Container.settings(configurationData: ConfigurationData) {
+fun Container.settings(cData: ConfigurationData) {
 
     sidebarCard("Settings", true) {
 
@@ -19,60 +17,37 @@ fun Container.settings(configurationData: ConfigurationData) {
 
         ConfigurationService.settingsForm = formPanel<Configuration> {
 
-            val preProcessingStrategies =
-                configurationData.preProcessingStrategies.map { StringPair(it.key.toString(), it.value) }
+            val preProcessingStrategies = cData.preProcessingStrategies.map { StringPair(it.key.toString(), it.value) }
             add(
                 Configuration::preProcessingStrategy,
-                simpleSelect(
+                SimpleSelect(
                     options = preProcessingStrategies,
                     label = "Preprocessing Strategy"
-                ).apply {
-                    subscribe {
-                        if (!it.isNullOrBlank() && isActive) {
-                            ConfigurationService.updateConfiguration()
-                        }
-                    }
-                })
+                )
+            )
 
             val variableSelectionStrategies =
-                configurationData.variableSelectionStrategies.map { StringPair(it.key.toString(), it.value) }
+                cData.variableSelectionStrategies.map { StringPair(it.key.toString(), it.value) }
             add(
                 Configuration::variableSelectionHeuristic,
-                simpleSelect(options = variableSelectionStrategies, label = "Variable Selection Heuristic").apply {
-                    subscribe {
-                        if (!it.isNullOrBlank() && isActive) {
-                            ConfigurationService.updateConfiguration()
-                        }
-                    }
-                }
+                SimpleSelect(options = variableSelectionStrategies, label = "Variable Selection Heuristic")
             )
 
             val domainSelectionStrategies =
-                configurationData.domainSelectionStrategies.map { StringPair(it.key.toString(), it.value) }
+                cData.domainSelectionStrategies.map { StringPair(it.key.toString(), it.value) }
             add(
                 Configuration::domainSelectionHeuristic,
-                simpleSelect(options = domainSelectionStrategies, label = "Value Selection Heuristic").apply {
-                    subscribe {
-                        if (!it.isNullOrBlank() && isActive) {
-                            ConfigurationService.updateConfiguration()
-                        }
-                    }
-                })
-
-            val constraintPropagationStrategies =
-                configurationData.constraintPropagationStrategies.map { StringPair(it.key.toString(), it.value) }
-            add(
-                Configuration::constraintPropagationStrategy,
-                simpleSelect(options = constraintPropagationStrategies, label = "Constraint Propagation").apply {
-                    subscribe {
-                        if (!it.isNullOrBlank() && isActive) {
-                            ConfigurationService.updateConfiguration()
-                        }
-                    }
-                }
+                SimpleSelect(options = domainSelectionStrategies, label = "Value Selection Heuristic")
             )
 
-            val (min, max) = configurationData.speedRange ?: Pair(1, 10)
+            val constraintPropagationStrategies =
+                cData.constraintPropagationStrategies.map { StringPair(it.key.toString(), it.value) }
+            add(
+                Configuration::constraintPropagationStrategy,
+                SimpleSelect(options = constraintPropagationStrategies, label = "Constraint Propagation")
+            )
+
+            val (min, max) = cData.speedRange ?: Pair(1, 10)
             add(
                 Configuration::backtrackingSpeed,
                 Range(min = min, max = max, label = "Speed", step = 1).apply {

@@ -11,7 +11,6 @@ object ConfigurationService {
     var cspConfiguration = Configuration()
 
     fun setConfigurationData(cData: ConfigurationData) {
-
         cspConfiguration = cData.getDefault()
 
         settingsForm.setData(cspConfiguration)
