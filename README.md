@@ -12,6 +12,8 @@ The objective is to place a tent for each tree so that the following conditions 
 * in each row and column there are as many tents as the number in the margin indicates
 * two tents may not stand next to each other, not even diagonally
 
+**Example**
+
 <img src="img/tat-example.png" alt="Example Tents & Trees" width="360"/>
 
 <details>
@@ -27,9 +29,10 @@ problem (CSP). CSPs are composed of variables with possible values that fall int
 constraints which impose restrictions on the possible variable assignments. In order to solve a constraint-satisfaction
 problem, a well-formed assignment of the variables must be found which satisfies *all* constraints.
 
-CSPs on finite domains are usually solved with some form of search, in this particular case using a backtracking
-algorithm. Backtracking is a recursive depth-first algorithm based on the trial-and-error principle, in which a partial
-solution is systematically expanded into an overall solution.
+CSPs on finite domains are usually solved with some form of search, in this case using a backtracking
+algorithm. 
+Backtracking refers to a recursive depth-first algorithm based on the trial-and-error principle, in which a partial
+solution is incrementally expanded into an overall solution.
 
 The general procedure looks as follows:
 
@@ -51,6 +54,9 @@ function recursive-backtracking(assignment, csp):
         return failure
     
 ```
+
+In its most basic implementation, the backtracking algorithm resembles a fairly naive brute-force approach. 
+However, there are various heuristics for improving the CSP performance and decreasing search effort.
 
 ## Heuristics
 
