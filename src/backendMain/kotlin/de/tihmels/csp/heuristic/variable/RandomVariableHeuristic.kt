@@ -5,7 +5,7 @@ import de.tihmels.Location
 import de.tihmels.annotation.HasName
 import de.tihmels.csp.constraint.Constraint
 
-@HasName("Most Constraining Variable")
+@HasName("Random Variable")
 class RandomVariableHeuristic : ISelectVariableHeuristic {
 
     override fun selectVariable(

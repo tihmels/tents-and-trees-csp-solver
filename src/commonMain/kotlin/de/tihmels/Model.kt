@@ -3,7 +3,12 @@ package de.tihmels
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CSPStatistics(val totalSteps: Int = 0, val totalErrors: Int = 0, val solved: Boolean = false)
+data class CSPStatistics(
+    val totalSteps: Int = 0,
+    val totalErrors: Int = 0,
+    val deadEnds: Int = 0,
+    val solved: Boolean = false
+)
 
 @Serializable
 data class TentsAndTrees(
@@ -99,9 +104,6 @@ sealed class SMessageType {
 
     @Serializable
     data class AssignmentStateUpdate(val assignment: Assignment, val statistics: CSPStatistics) : SMessageType()
-
-    @Serializable
-    data class AssignmentUpdate(val assignment: Assignment) : SMessageType()
 
     @Serializable
     data class BacktrackingUpdate(val state: BacktrackingState) : SMessageType()

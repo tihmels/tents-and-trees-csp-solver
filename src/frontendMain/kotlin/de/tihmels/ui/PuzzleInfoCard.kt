@@ -56,15 +56,15 @@ fun Container.tentData(puzzle: TentsAndTrees?) {
                     ) {
 
                         overflow = Overflow.HIDDEN
-                        addCssStyle(Style { flexGrow = 1})
+                        addCssStyle(Style { flexGrow = 1 })
 
-                        for(statistic in statisticsHistory) {
+                        for (statistic in statisticsHistory) {
                             div(className = "badge badge-pill badge-info") {
                                 content = statistic.totalSteps.toString()
                             }
                         }
 
-                        if(!it.solved) {
+                        if (!it.solved) {
                             div(className = "badge badge-pill badge-info") {
                                 content = it.totalSteps.toString()
                             }
@@ -93,17 +93,52 @@ fun Container.tentData(puzzle: TentsAndTrees?) {
                     ) {
 
                         overflow = Overflow.HIDDEN
-                        addCssStyle(Style { flexGrow = 1})
+                        addCssStyle(Style { flexGrow = 1 })
 
-                        for(statistic in statisticsHistory) {
+                        for (statistic in statisticsHistory) {
                             div(className = "badge badge-pill badge-info") {
                                 content = statistic.totalErrors.toString()
                             }
                         }
 
-                        if(!it.solved) {
+                        if (!it.solved) {
                             div(className = "badge badge-pill badge-info") {
                                 content = it.totalErrors.toString()
+                            }
+                        }
+                    }
+                }
+
+                flexPanel(
+                    direction = FlexDirection.ROW,
+                    justify = JustifyContent.FLEXEND,
+                    wrap = FlexWrap.NOWRAP,
+                    alignItems = AlignItems.CENTER,
+                ) {
+                    div("Dead-Ends", className = "label label-default") {
+                        addCssStyle(Style { flexBasis = 40.perc })
+                    }
+
+                    flexPanel(
+                        direction = FlexDirection.ROW,
+                        justify = JustifyContent.FLEXEND,
+                        wrap = FlexWrap.NOWRAP,
+                        alignItems = AlignItems.CENTER,
+                        spacing = 3
+                    ) {
+
+                        overflow = Overflow.HIDDEN
+                        addCssStyle(Style { flexGrow = 1 })
+
+                        for (statistic in statisticsHistory) {
+                            div(className = "badge badge-pill badge-info") {
+                                content = statistic.deadEnds.toString()
+                            }
+                        }
+
+                        if (!it.solved) {
+                            div(className = "badge badge-pill badge-info") {
+                                content = it.deadEnds.toString()
                             }
                         }
                     }

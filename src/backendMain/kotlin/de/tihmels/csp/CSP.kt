@@ -25,6 +25,7 @@ class CSP(
 
     private var totalSteps: Int = 0
     private var totalErrors: Int = 0
+    private var deadEnds: Int = 0
 
     private var speed = configuration.speed
         set(value) {
@@ -54,7 +55,7 @@ class CSP(
     ): Map<Location, Domain>? {
 
         if (assignment.size == variables.size) {
-            emit(CSPStateUpdate(assignment, CSPStatistics(totalSteps, totalErrors, true)))
+            emit(CSPStateUpdate(assignment, CSPStatistics(totalSteps, totalErrors, deadEnds, true)))
             return assignment
         }
 
@@ -80,7 +81,7 @@ class CSP(
             localAssignment[unassignedVariable] = value
 
             delay(delay)
-            emit(CSPStateUpdate(localAssignment, CSPStatistics(totalSteps, totalErrors)))
+            emit(CSPStateUpdate(localAssignment, CSPStatistics(totalSteps, totalErrors, deadEnds)))
 
             if (isConsistent(unassignedVariable, localAssignment)) {
 
@@ -88,6 +89,7 @@ class CSP(
                 constraintPropagation.propagate(unassignedVariable, localAssignment, localDomains, constraints)
 
                 if (localDomains.values.any(List<Domain>::isEmpty)) {
+                    deadEnds++
                     continue
                 }
 

@@ -25,7 +25,7 @@ fun Container.settings(configurationData: ConfigurationData) {
                 Configuration::preProcessingStrategy,
                 simpleSelect(
                     options = preProcessingStrategies,
-                    label = "Preprocessing"
+                    label = "Preprocessing Strategy"
                 ).apply {
                     subscribe {
                         if (!it.isNullOrBlank() && isActive) {
@@ -51,7 +51,7 @@ fun Container.settings(configurationData: ConfigurationData) {
                 configurationData.domainSelectionStrategies.map { StringPair(it.key.toString(), it.value) }
             add(
                 Configuration::domainSelectionHeuristic,
-                simpleSelect(options = domainSelectionStrategies, label = "Domain Selection Heuristic").apply {
+                simpleSelect(options = domainSelectionStrategies, label = "Value Selection Heuristic").apply {
                     subscribe {
                         if (!it.isNullOrBlank() && isActive) {
                             ConfigurationService.updateConfiguration()

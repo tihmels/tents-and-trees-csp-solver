@@ -7,7 +7,7 @@ import de.tihmels.annotation.HasName
 import java.util.function.Function
 import java.util.stream.Collectors
 
-@HasName("Least Constraining Values")
+@HasName("Least Constraining Value")
 class LeastConstrainingValueOrderHeuristic : ISelectDomainHeuristic {
 
     override fun chooseDomains(

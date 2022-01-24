@@ -18,10 +18,6 @@ object PuzzleStateService {
         this.puzzleState.dispatch(StateAction.UpdatePuzzle(puzzle))
     }
 
-    fun updateAssignment(assignment: Assignment) {
-        this.puzzleState.dispatch(StateAction.UpdateAssignment(assignment))
-    }
-
     fun updateState(state: BacktrackingState) {
         this.puzzleState.dispatch(StateAction.UpdateBacktracking(state))
     }
@@ -44,7 +40,6 @@ object PuzzleStateService {
     sealed class StateAction : RAction {
         data class UpdateBacktracking(val state: BacktrackingState) : StateAction()
         data class UpdatePuzzle(val puzzle: TentsAndTrees) : StateAction()
-        data class UpdateAssignment(val assignment: Assignment) : StateAction()
         class UpdateAssignmentState(val assignment: Assignment, val statistics: CSPStatistics) : StateAction()
     }
 
@@ -52,11 +47,6 @@ object PuzzleStateService {
         is StateAction.UpdatePuzzle -> {
             state.copy(
                 puzzle = action.puzzle, assignment = Assignment(), statistics = CSPStatistics()
-            )
-        }
-        is StateAction.UpdateAssignment -> {
-            state.copy(
-                assignment = action.assignment
             )
         }
         is StateAction.UpdateBacktracking -> {
