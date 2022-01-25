@@ -56,14 +56,14 @@ function recursive-backtracking(assignment, csp):
     
 ```
 
-In its most basic form, the backtracking algorithm resembles a fairly naive brute-force approach. However, there is some
-room for improvements to increase CSP performance and possibly reduce search effort.
+In its most basic form, the classic backtracking algorithm resembles a fairly naive brute-force approach. However, there
+is some room for improvements to increase CSP performance and possibly reduce search effort.
 
-For example, heuristics can be used to influence the precedence of the variables to be selected or the order of the domain values.
-In addition, preprocessing can be used to systematically prune the possible values of the variables according to certain rules before the actual backtracking starts.
-Further improvements can be achieved by constraint propagation or forward checking, i.e. when a value is assigned to the current variable, any value in the domain of a "future" variable that conflicts with that assignment is (temporarily) removed from the domain.
-
-This webapp allows to apply and compare different strategies.
+For example, different heuristics can be applied that influence the precedence of the variables to be selected or the
+order of the domain values. In addition, preprocessing can be used to systematically prune the possible values of the
+variables according to certain rules before the actual backtracking starts. Further improvements can be achieved by
+constraint propagation, i.e. when a value is assigned to the current variable, any value in the
+domain of a "future" variable that conflicts with that assignment is (temporarily) removed from the domain.
 
 ## Heuristics
 
