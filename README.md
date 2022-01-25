@@ -60,10 +60,12 @@ In its most basic form, the classic backtracking algorithm resembles a fairly na
 is some room for improvements to increase CSP performance and possibly reduce search effort.
 
 For example, different heuristics can be applied that influence the precedence of the variables to be selected or the
-order of the domain values. In addition, preprocessing can be used to systematically prune the possible values of the
-variables according to certain rules before the actual backtracking starts. Further improvements can be achieved by
+order of the sampled domain values. In addition, preprocessing strategies can be used to systematically prune the possible values of the
+variables before the actual backtracking starts. Further improvements can be achieved by applying
 constraint propagation, i.e. when a value is assigned to the current variable, any value in the
 domain of a "future" variable that conflicts with that assignment is (temporarily) removed from the domain.
+
+This web application implements several of the previously mentioned strategies and allows them to be compared with each other.
 
 ## Heuristics
 
