@@ -112,6 +112,12 @@ The first value in the series of possible values is selected.
 
 The value that triggers the fewest constraints on other variables is selected.
 
+## Other Information
+
+**Coroutine-based.** Both the frontend and the backend make heavy use of Kotlin coroutines. In particular, on the backend, each running CSP instance of a puzzle is executed in its own coroutine using asynchronous Flows. For example, only one solution step is ever computed in advance before being submitted to the frontend. 
+
+
+
 ## Gradle Tasks
 
 ### Compiling
